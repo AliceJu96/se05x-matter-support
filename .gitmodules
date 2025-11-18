@@ -1,0 +1,4 @@
+[submodule "plug-and-trust"]
+	path = deps/plug-and-trust
+	url = https://github.com/NXP/plug-and-trust.git
+	branch = int/CHIPSE_Release

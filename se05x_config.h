@@ -1,0 +1,6 @@
+#pragma once
+
+#define SE05X_TYPE_SE051H   1
+#define SE05X_TYPE_SE051HV2 2
+
+#define SE05X_TYPE  (SE05X_TYPE_SE051H)

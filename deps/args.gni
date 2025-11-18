@@ -1,0 +1,3 @@
+declare_args() {
+  se05x_platform_mcu = true
+}

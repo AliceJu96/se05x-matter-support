@@ -1,0 +1,67 @@
+import("args.gni")
+
+config("se05x_config") {
+  # defines += ["FLOW_VERBOSE"]
+  defines = [ "SSS_USE_FTR_FILE" ]
+
+  defines += [
+    "T1oI2C",
+    "T1oI2C_UM11225",
+    "SMCOM_T1oI2C",
+  ]
+
+  if (se05x_platform_mcu) {
+    defines += [ "AX_EMBEDDED = 1"]
+  }
+
+  include_dirs = [
+    "plug-and-trust",
+    "plug-and-trust/sss/inc",
+    "plug-and-trust/sss/port/default",
+    "plug-and-trust/sss/ex/src",
+    "plug-and-trust/sss/ex/inc",
+    "plug-and-trust/hostlib/hostLib/inc",
+    "plug-and-trust/hostlib/hostLib/libCommon/infra",
+    "plug-and-trust/hostlib/hostLib/libCommon/smCom",
+    "plug-and-trust/hostlib/hostLib/libCommon/log",
+    "plug-and-trust/hostlib/hostLib/se05x_03_xx_xx",
+    "plug-and-trust/hostlib/hostLib/platform/inc",
+    "plug-and-trust/hostlib/hostLib/libCommon/smCom",
+    "plug-and-trust/hostlib/hostLib/libCommon/smCom/T1oI2C",
+    "plug-and-trust/hostlib/hostLib/accessManager/inc",
+  ]
+}
+
+static_library("se05x") {
+  sources = [
+    "plug-and-trust/hostlib/hostLib/libCommon/infra/global_platf.c",
+    "plug-and-trust/hostlib/hostLib/libCommon/infra/sm_apdu.c",
+    "plug-and-trust/hostlib/hostLib/libCommon/infra/sm_connect.c",
+    "plug-and-trust/hostlib/hostLib/libCommon/infra/sm_errors.c",
+    "plug-and-trust/hostlib/hostLib/libCommon/smCom/smCom.c",
+    "plug-and-trust/hostlib/hostLib/se05x/src/se05x_ECC_curves.c",
+    "plug-and-trust/hostlib/hostLib/se05x/src/se05x_mw.c",
+    "plug-and-trust/hostlib/hostLib/se05x/src/se05x_tlv.c",
+    "plug-and-trust/hostlib/hostLib/se05x_03_xx_xx/se05x_APDU.c",
+    "plug-and-trust/sss/ex/src/ex_sss_boot.c",
+    "plug-and-trust/sss/ex/src/ex_sss_boot_connectstring.c",
+    "plug-and-trust/sss/ex/src/ex_sss_se05x.c",
+    "plug-and-trust/sss/ex/src/ex_sss_se05x_auth.c",
+    "plug-and-trust/sss/src/fsl_sss_apis.c",
+    "plug-and-trust/sss/src/fsl_sss_util_asn1_der.c",
+    "plug-and-trust/sss/src/fsl_sss_util_rsa_sign_utils.c",
+    "plug-and-trust/sss/src/keystore/keystore_cmn.c",
+    "plug-and-trust/sss/src/keystore/keystore_pc.c",
+    "plug-and-trust/sss/src/mbedtls/fsl_sss_mbedtls_apis.c",
+    "plug-and-trust/sss/src/se05x/fsl_sss_se05x_apis.c",
+    "plug-and-trust/sss/src/se05x/fsl_sss_se05x_mw.c",
+    "plug-and-trust/sss/src/se05x/fsl_sss_se05x_policy.c",
+    "plug-and-trust/hostlib/hostLib/libCommon/smCom/T1oI2C/phNxpEsePal_i2c.c",
+    "plug-and-trust/hostlib/hostLib/libCommon/smCom/T1oI2C/phNxpEseProto7816_3.c",
+    "plug-and-trust/hostlib/hostLib/libCommon/smCom/T1oI2C/phNxpEse_Api.c",
+    "plug-and-trust/hostlib/hostLib/libCommon/smCom/smComT1oI2C.c",
+    "plug-and-trust/hostlib/hostLib/platform/rsp/se05x_reset.c",
+  ]
+
+  all_dependent_configs = [ ":se05x_config" ]
+}
