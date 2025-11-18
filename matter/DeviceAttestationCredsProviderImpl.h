@@ -9,7 +9,7 @@ namespace Credentials {
 class DeviceAttestationCredentialsProviderImpl : public DeviceAttestationCredentialsProvider
 {
 public:
-    static DeviceAttestationCredentialsProviderImpl & GetInstance();
+    static DeviceAttestationCredentialsProvider & GetInstance();
 
     CHIP_ERROR GetCertificationDeclaration(MutableByteSpan & out_cd_buffer) override;
     CHIP_ERROR GetFirmwareInformation(MutableByteSpan & out_firmware_info_buffer) override;

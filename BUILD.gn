@@ -3,13 +3,17 @@ import("//build_overrides/chip.gni")
 config("se05x_matter_config") {
   include_dirs = [
     ".",
-    "matter",
-    "se05x",
-    "se051h",
   ]
 }
 
 static_library("se05x_matter") {
+  include_dirs = [
+    ".",
+    "matter",
+    "se05x",
+    "se051h",
+  ]
+
   sources = [
     "matter/DeviceAttestationCredsProviderImpl.cpp",
     "se05x_platform.c",
@@ -21,7 +25,7 @@ static_library("se05x_matter") {
 
   all_dependent_configs = [ ":se05x_matter_config" ]
 
-  deps = [ 
+  public_deps = [ 
     "${chip_root}/src/credentials:credentials",
     "deps:se05x",
   ]

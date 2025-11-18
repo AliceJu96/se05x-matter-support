@@ -386,5 +386,49 @@ error:
 
 int se05x_attestation_sign(const uint8_t *msg, size_t msg_len, uint8_t *sig, size_t *sig_len)
 {
+    sss_se05x_session_t *session = se05x_default_session_open();
+    if (!session) {
+        return -1;
+    }
+
+    sss_status_t status = kStatus_SSS_Fail;
+    sss_se05x_key_store_t keystore;    
+
+    status = sss_se05x_key_store_context_init(&keystore, session);
+    if (status != kStatus_SSS_Success) {
+        goto error;
+    }
+
+    sss_se05x_object_t object;
+    status = sss_se05x_key_object_init(&object, &keystore);
+    if (status != kStatus_SSS_Success) {
+        goto error;
+    }
+
+    status = sss_se05x_key_object_get_handle(&object, SE05X_ATTESTATION_DEVICE_KEY_PAIR_ID);
+    if (status != kStatus_SSS_Success) {
+        goto error;
+    }
+
+    sss_se05x_asymmetric_t assymetric_context;
+    status = sss_se05x_asymmetric_context_init(&assymetric_context, session, &object, 
+                                               kAlgorithm_SSS_ECDSA_SHA256, kMode_SSS_Sign);
+    if (status != kStatus_SSS_Success) {
+        goto error;
+    }
+
+    status = sss_se05x_asymmetric_sign_digest(&assymetric_context, msg, msg_len, sig, sig_len);
+    if (status != kStatus_SSS_Success) {
+        goto error;
+    }
+
+    sss_se05x_asymmetric_context_free(&assymetric_context);
+
+    se05x_default_session_close(session);
+
     return 0;
+error:
+    se05x_default_session_close(session);
+
+    return -1;
 }
