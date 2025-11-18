@@ -1,11 +1,22 @@
 #include <lib/core/CHIPError.h>
 #include <lib/support/Span.h>
 
+<<<<<<< HEAD
 #include "DeviceAttestationCredsProviderImpl.h"
+=======
+#include "DeviceAttestationCredentialsProviderImpl.h"
+>>>>>>> ab39190 (feat: matter se051h support)
 #include "se051h/se05x_attestation.h"
 
 using chip::ByteSpan;
 using chip::MutableByteSpan;
+<<<<<<< HEAD
+=======
+using chip::CHIP_ERROR;
+using chip::CHIP_NO_ERROR;
+using chip::CHIP_ERROR_INTERNAL;
+using chip::CHIP_ERROR_BUFFER_TOO_SMALL;
+>>>>>>> ab39190 (feat: matter se051h support)
 
 namespace chip {
 namespace Credentials {
