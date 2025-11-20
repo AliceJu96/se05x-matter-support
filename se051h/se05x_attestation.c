@@ -392,8 +392,23 @@ int se05x_attestation_sign(const uint8_t *msg, size_t msg_len, uint8_t *sig, siz
     }
 
     sss_status_t status = kStatus_SSS_Fail;
-    sss_se05x_key_store_t keystore;    
 
+    sss_se05x_digest_t digest_context;
+    status = sss_se05x_digest_context_init(&digest_context, session, kAlgorithm_SSS_SHA256, kMode_SSS_Digest);
+    if (status != kStatus_SSS_Success) {
+        goto error;
+    }
+
+    uint8_t sha256_buf[32];
+    memset(sha256_buf, 0, sizeof(sha256_buf));
+
+    size_t sha256_size = 32;
+    status = sss_se05x_digest_one_go(&digest_context, msg, msg_len, sha256_buf, &sha256_size);
+    if (status != kStatus_SSS_Success) {
+        goto error;
+    }
+
+    sss_se05x_key_store_t keystore;    
     status = sss_se05x_key_store_context_init(&keystore, session);
     if (status != kStatus_SSS_Success) {
         goto error;
@@ -417,7 +432,7 @@ int se05x_attestation_sign(const uint8_t *msg, size_t msg_len, uint8_t *sig, siz
         goto error;
     }
 
-    status = sss_se05x_asymmetric_sign_digest(&assymetric_context, msg, msg_len, sig, sig_len);
+    status = sss_se05x_asymmetric_sign_digest(&assymetric_context, sha256_buf, sha256_size, sig, sig_len);
     if (status != kStatus_SSS_Success) {
         goto error;
     }
