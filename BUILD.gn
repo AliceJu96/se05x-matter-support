@@ -3,17 +3,13 @@ import("//build_overrides/chip.gni")
 config("se05x_matter_config") {
   include_dirs = [
     ".",
-  ]
-}
-
-static_library("se05x_matter") {
-  include_dirs = [
-    ".",
     "matter",
     "se05x",
     "se051h",
   ]
+}
 
+static_library("se05x_matter") {
   sources = [
     "matter/DeviceAttestationCredsProviderImpl.cpp",
     "se05x_platform.c",

@@ -1,20 +1,14 @@
-#include <lib/core/CHIPError.h>
-#include <lib/support/Span.h>
-
-#include "DeviceAttestationCredsProviderImpl.h"
 #include "se051h/se05x_attestation.h"
-
-using chip::ByteSpan;
-using chip::MutableByteSpan;
+#include "DeviceAttestationCredsProviderImpl.h"
 
 namespace chip {
 namespace Credentials {
 
-DeviceAttestationCredentialsProvider &
+DeviceAttestationCredentialsProvider *
 DeviceAttestationCredentialsProviderImpl::GetInstance()
 {
     static DeviceAttestationCredentialsProviderImpl sInstance;
-    return sInstance;
+    return &sInstance;
 }
 
 CHIP_ERROR DeviceAttestationCredentialsProviderImpl::GetCertificationDeclaration(
