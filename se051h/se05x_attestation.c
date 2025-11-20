@@ -384,6 +384,60 @@ error:
     return -1;
 }
 
+#define ECDSA_P256_SIG_DER_SIZE (72)
+#define ECDSA_P256_SIG_SIZE     (64)
+#define ECDSA_P256_KEY_SIZE     (32)
+
+static int parse_ecdsa_der_p256(uint8_t sig[ECDSA_P256_SIG_SIZE],
+                                const uint8_t sig_der[ECDSA_P256_SIG_DER_SIZE])
+{
+    size_t idx = 0;
+
+    if (sig_der[idx++] != 0x30) {
+        return -1;
+    }
+
+    uint8_t sig_len = sig_der[idx++];
+    if (sig_len + 2 > ECDSA_P256_SIG_DER_SIZE) {
+        return -2;
+    }
+
+    if (sig_der[idx++] != 0x02) {
+        return -3;
+    }
+    size_t r_len = sig_der[idx++];
+    const uint8_t *r = &sig_der[idx];
+    
+    idx += r_len;;
+
+    if (sig_der[idx++] != 0x02) {
+        return -5;
+    }
+    size_t s_len = sig_der[idx++];
+    const uint8_t *s = &sig_der[idx];
+    
+    memset(sig, 0, ECDSA_P256_SIG_SIZE);
+
+    /* r -> sig[0..31] */
+    {
+        size_t copy_r = (r_len > ECDSA_P256_KEY_SIZE) ? ECDSA_P256_KEY_SIZE : r_len;
+        size_t off_r  = (r_len > ECDSA_P256_KEY_SIZE) ? (r_len - ECDSA_P256_KEY_SIZE) : 0u;
+
+        memcpy(sig + (ECDSA_P256_KEY_SIZE - copy_r), r + off_r, copy_r);
+    }
+
+    /* s -> sig[32..63] */
+    {
+        size_t copy_s = (s_len > ECDSA_P256_KEY_SIZE) ? ECDSA_P256_KEY_SIZE : s_len;
+        size_t off_s  = (s_len > ECDSA_P256_KEY_SIZE) ? (s_len - ECDSA_P256_KEY_SIZE) : 0u;
+
+        memcpy(sig + ECDSA_P256_KEY_SIZE + (ECDSA_P256_KEY_SIZE - copy_s),
+               s + off_s, copy_s);
+    }
+
+    return 0;
+}
+
 int se05x_attestation_sign(const uint8_t *msg, size_t msg_len, uint8_t *sig, size_t *sig_len)
 {
     sss_se05x_session_t *session = se05x_default_session_open();
@@ -402,8 +456,8 @@ int se05x_attestation_sign(const uint8_t *msg, size_t msg_len, uint8_t *sig, siz
     uint8_t sha256_buf[32];
     memset(sha256_buf, 0, sizeof(sha256_buf));
 
-    size_t sha256_size = 32;
-    status = sss_se05x_digest_one_go(&digest_context, msg, msg_len, sha256_buf, &sha256_size);
+    size_t sha256_buf_len = 32;
+    status = sss_se05x_digest_one_go(&digest_context, msg, msg_len, sha256_buf, &sha256_buf_len);
     if (status != kStatus_SSS_Success) {
         goto error;
     }
@@ -432,12 +486,24 @@ int se05x_attestation_sign(const uint8_t *msg, size_t msg_len, uint8_t *sig, siz
         goto error;
     }
 
-    status = sss_se05x_asymmetric_sign_digest(&assymetric_context, sha256_buf, sha256_size, sig, sig_len);
+    uint8_t sig_buf[72];
+    size_t sig_buf_len = 72;
+    status = sss_se05x_asymmetric_sign_digest(&assymetric_context, sha256_buf, sha256_buf_len, sig_buf, &sig_buf_len);
     if (status != kStatus_SSS_Success) {
         goto error;
     }
 
     sss_se05x_asymmetric_context_free(&assymetric_context);
+
+    if (*sig_len < ECDSA_P256_SIG_SIZE) {
+        goto error;
+    }
+
+    int err = parse_ecdsa_der_p256(sig, sig_buf);
+    if (err) {
+        goto error;
+    }
+    *sig_len = ECDSA_P256_SIG_SIZE;
 
     se05x_default_session_close(session);
 
