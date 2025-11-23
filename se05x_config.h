@@ -1,6 +1,5 @@
 #pragma once
 
-#define SE05X_TYPE_SE051H   1
-#define SE05X_TYPE_SE051HV2 2
+#include "se05x_constant.h"
 
-#define SE05X_TYPE  (SE05X_TYPE_SE051H)
+#define SE05X_VARIANT  (SE05X_VARIANT_H)

@@ -1,3 +1,4 @@
+import("//build_overrides/build.gni")
 import("//build_overrides/chip.gni")
 
 config("se05x_matter_config") {
@@ -5,7 +6,6 @@ config("se05x_matter_config") {
     ".",
     "matter",
     "se05x",
-    "se051h",
   ]
 }
 
@@ -14,9 +14,9 @@ static_library("se05x_matter") {
     "matter/DeviceAttestationCredsProviderImpl.cpp",
     "se05x_platform.c",
     "se05x/se05x_session.c",
-    "se051h/se05x_attestation.c",
-    "se051h/se05x_spake2p.c",
-    "se051h/se05x_t4t.c",
+    "se05x/se05x_attestation.c",
+    "se05x/se05x_spake2p.c",
+    "se05x/se05x_t4t.c",
   ]
 
   all_dependent_configs = [ ":se05x_matter_config" ]

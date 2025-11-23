@@ -1,11 +1,11 @@
-#include "se051h/se05x_attestation.h"
+#include "se05x/se05x_attestation.h"
 #include "DeviceAttestationCredsProviderImpl.h"
 
 namespace chip {
 namespace Credentials {
 
 DeviceAttestationCredentialsProvider *
-DeviceAttestationCredentialsProviderImpl::GetInstance()
+DeviceAttestationCredentialsProviderImpl::GetInstance(void)
 {
     static DeviceAttestationCredentialsProviderImpl sInstance;
     return &sInstance;
