@@ -1,17 +1,17 @@
 #include "se05x/se05x_attestation.h"
-#include "DeviceAttestationCredsProviderImpl.h"
+#include "SE05xDeviceAttestationCredsProvider.h"
 
 namespace chip {
 namespace Credentials {
 
 DeviceAttestationCredentialsProvider *
-DeviceAttestationCredentialsProviderImpl::GetInstance(void)
+SE05xDeviceAttestationCredentialsProvider::GetInstance(void)
 {
-    static DeviceAttestationCredentialsProviderImpl sInstance;
+    static SE05xDeviceAttestationCredentialsProvider sInstance;
     return &sInstance;
 }
 
-CHIP_ERROR DeviceAttestationCredentialsProviderImpl::GetCertificationDeclaration(
+CHIP_ERROR SE05xDeviceAttestationCredentialsProvider::GetCertificationDeclaration(
     MutableByteSpan & out_cd_buffer)
 {
     size_t capacity  = out_cd_buffer.size();
@@ -33,7 +33,7 @@ CHIP_ERROR DeviceAttestationCredentialsProviderImpl::GetCertificationDeclaration
     return CHIP_NO_ERROR;
 }
 
-CHIP_ERROR DeviceAttestationCredentialsProviderImpl::GetFirmwareInformation(
+CHIP_ERROR SE05xDeviceAttestationCredentialsProvider::GetFirmwareInformation(
     MutableByteSpan & out_firmware_info_buffer)
 {
     out_firmware_info_buffer.reduce_size(0);
@@ -41,7 +41,7 @@ CHIP_ERROR DeviceAttestationCredentialsProviderImpl::GetFirmwareInformation(
     return CHIP_NO_ERROR;
 }
 
-CHIP_ERROR DeviceAttestationCredentialsProviderImpl::GetDeviceAttestationCert(
+CHIP_ERROR SE05xDeviceAttestationCredentialsProvider::GetDeviceAttestationCert(
     MutableByteSpan & out_dac_buffer)
 {
     size_t capacity  = out_dac_buffer.size();
@@ -63,7 +63,7 @@ CHIP_ERROR DeviceAttestationCredentialsProviderImpl::GetDeviceAttestationCert(
     return CHIP_NO_ERROR;
 }
 
-CHIP_ERROR DeviceAttestationCredentialsProviderImpl::GetProductAttestationIntermediateCert(
+CHIP_ERROR SE05xDeviceAttestationCredentialsProvider::GetProductAttestationIntermediateCert(
     MutableByteSpan & out_pai_buffer)
 {
     size_t capacity  = out_pai_buffer.size();
@@ -85,7 +85,7 @@ CHIP_ERROR DeviceAttestationCredentialsProviderImpl::GetProductAttestationInterm
     return CHIP_NO_ERROR;
 }
 
-CHIP_ERROR DeviceAttestationCredentialsProviderImpl::SignWithDeviceAttestationKey(
+CHIP_ERROR SE05xDeviceAttestationCredentialsProvider::SignWithDeviceAttestationKey(
     const ByteSpan & message_to_sign, MutableByteSpan & out_signature_buffer)
 {
     size_t capacity  = out_signature_buffer.size();

@@ -5,7 +5,7 @@
 namespace chip {
 namespace Credentials {
 
-class DeviceAttestationCredentialsProviderImpl : public DeviceAttestationCredentialsProvider
+class SE05xDeviceAttestationCredentialsProvider : public DeviceAttestationCredentialsProvider
 {
 public:
     static DeviceAttestationCredentialsProvider *GetInstance(void);
@@ -18,11 +18,11 @@ public:
                                             MutableByteSpan & out_signature_buffer) override;
 
 private:
-    DeviceAttestationCredentialsProviderImpl()  = default;
-    ~DeviceAttestationCredentialsProviderImpl() = default;
+    SE05xDeviceAttestationCredentialsProvider()  = default;
+    ~SE05xDeviceAttestationCredentialsProvider() = default;
 
-    DeviceAttestationCredentialsProviderImpl(const DeviceAttestationCredentialsProviderImpl &)            = delete;
-    DeviceAttestationCredentialsProviderImpl & operator=(const DeviceAttestationCredentialsProviderImpl &) = delete;
+    SE05xDeviceAttestationCredentialsProvider(const SE05xDeviceAttestationCredentialsProvider &)            = delete;
+    SE05xDeviceAttestationCredentialsProvider & operator=(const SE05xDeviceAttestationCredentialsProvider &) = delete;
 };
 
 } // namespace Credentials
